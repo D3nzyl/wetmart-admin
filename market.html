@@ -11,11 +11,11 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <link rel="icon" type="image/png" href="./img/wetmart_icon.png"/>
-    <title>Wetmart - Edit Admin</title>
+    <title>Wetmart - View/Edit Admin</title>
     
 </head>
 
-<body onload="viewAdmin();">
+<body onload="market('')">
 
 <div class="wrapper">
   <div class="sidebar">
@@ -45,58 +45,22 @@
   <div class="main_content">
     <div class="header">
       <a href="home.html" id="home"><i class="fa fa-home"></i></a>
-      View/Edit Admin
+      View/Edit Market
       <a href="index.html" id="logout"><i class="fa fa-sign-out"></i> Logout</a>
     </div>  
     <div class="info">
       <div class="row">
-        <div class="col-10 mx-auto" id="add-container">
-          <div class="row">
-            <div class="col-9">Admin</div>
-            <div class="col-3"> <div class="delete-button" onclick=deleteAdmin()><i class="fa fa-trash"></i> Delete Admin</div></div>
-          </div>
-          <hr>
-          <div class="row">
-            <div class="col-2">Admin ID: </div>
-            <div class="col-4" id="admin-id"></div>
-          </div>
-          <div class="row">
-            <div class="col-2">
-              <label class="form-label" for="admin-first-name">First Name:</label>
-              <label class="form-label" for="admin-email">Email:</label>
-              <label class="form-label" for="admin-mobile-number">Mobile Number:</label>
-              <label class="form-label" for="admin-gender">Gender:</label>
-              <label class="form-label" for="admin-password">Password:</label>
-            </div>
-            <div class="col-4">
-              <input class="form-input" id="admin-first-name" type="text" placeholder="First Name">
-              <input class="form-input" id="admin-email" type="email" placeholder="Email">
-              <input class="form-input" id="admin-mobile-number" type="text" placeholder="Mobile Number">
-              <select id="admin-gender" class="form-input">
-                <option value="m">M</option>
-                <option value="f">F</option>
-              </select>
-              <input class="form-input" id="admin-password" type="text" placeholder="Password">
-            </div>
-            <div class="col-2">
-              <label class="form-label" for="admin-last-name">Last Name:</label>
-              <label class="form-label" for="admin-date-of-birth">Date of Birth:</label>
-              <label class="form-label" for="admin-address">Address:</label>
-              <label class="form-label" for="admin-position">Position</label>
-            </div>
-            <div class="col-4">
-              <input class="form-input" id="admin-last-name" type="text" placeholder="Last Name">
-              <input class="form-input" id="admin-date-of-birth" type="date" placeholder="Date of Birth">
-              <input class="form-input" id="admin-address" type="text" placeholder="Address">
-              <input class="form-input" id="admin-position" type="text" placeholder="Position">
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-12">
-              <div class="add-button" onclick=updateAdmin()><i class="fa fa-save"></i> Update</div>
-            </div>
-          </div>
-          </div>
+        <div class="col-6">
+          <label id="searchbar-label" for="searchbar">Search:</label>
+          <input id="searchbar" type="text" placeholder="Market Name...">
+          <i id="searchbar-icon" onclick="market(document.getElementById('searchbar').value)" class="fa fa-search"></i>
+        </div>
+        <div class="col-3">
+          <div id="add-new-button" onclick="window.location = './addMarket.html'"><i class="fa fa-plus-circle"></i> Add Market</div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 mx-auto" id="market-table-body">
         </div>
       </div>
     </div>

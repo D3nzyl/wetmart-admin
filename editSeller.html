@@ -11,11 +11,11 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <link rel="icon" type="image/png" href="./img/wetmart_icon.png"/>
-    <title>Wetmart - Edit Admin</title>
+    <title>Wetmart - Edit Seller</title>
     
 </head>
 
-<body onload="viewAdmin();">
+<body onload="getMarketList().then(function(){viewSeller()});">
 
 <div class="wrapper">
   <div class="sidebar">
@@ -45,55 +45,65 @@
   <div class="main_content">
     <div class="header">
       <a href="home.html" id="home"><i class="fa fa-home"></i></a>
-      View/Edit Admin
+      View/Edit Seller
       <a href="index.html" id="logout"><i class="fa fa-sign-out"></i> Logout</a>
     </div>  
     <div class="info">
       <div class="row">
         <div class="col-10 mx-auto" id="add-container">
           <div class="row">
-            <div class="col-9">Admin</div>
-            <div class="col-3"> <div class="delete-button" onclick=deleteAdmin()><i class="fa fa-trash"></i> Delete Admin</div></div>
+            <div class="col-9">Seller</div>
+            <div class="col-3"> <div class="delete-button" onclick=deleteSeller()><i class="fa fa-trash"></i> Delete Seller</div></div>
           </div>
           <hr>
           <div class="row">
-            <div class="col-2">Admin ID: </div>
-            <div class="col-4" id="admin-id"></div>
+            <div class="col-2">Seller ID: </div>
+            <div class="col-4" id="seller-id"></div>
+            <div class="col-2">Seller Rating: </div>
+            <div class="col-4" id="seller-rating"></div>
           </div>
           <div class="row">
             <div class="col-2">
-              <label class="form-label" for="admin-first-name">First Name:</label>
-              <label class="form-label" for="admin-email">Email:</label>
-              <label class="form-label" for="admin-mobile-number">Mobile Number:</label>
-              <label class="form-label" for="admin-gender">Gender:</label>
-              <label class="form-label" for="admin-password">Password:</label>
+              <label class="form-label" for="seller-first-name">First Name:</label>
+              <label class="form-label" for="seller-store-name">Store Name:</label>
+              <label class="form-label" for="seller-email">Email:</label>
+              <label class="form-label" for="seller-mobile-number">Mobile Number:</label>
+              <label class="form-label" for="seller-date-of-birth">Date of Birth</label>
+              <label class="form-label" for="seller-password">Password:</label>
+              <label class="form-label" for="seller-gender">Gender:</label>
+              <label class="form-label" for="seller-address">Address</label>
             </div>
             <div class="col-4">
-              <input class="form-input" id="admin-first-name" type="text" placeholder="First Name">
-              <input class="form-input" id="admin-email" type="email" placeholder="Email">
-              <input class="form-input" id="admin-mobile-number" type="text" placeholder="Mobile Number">
-              <select id="admin-gender" class="form-input">
+              <input class="form-input" id="seller-first-name" type="text" placeholder="First Name">
+              <input class="form-input" id="seller-store-name" type="text" placeholder="Store Name">
+              <input class="form-input" id="seller-email" type="email" placeholder="Email">
+              <input class="form-input" id="seller-mobile-number" type="text" placeholder="Mobile Number">
+              <input class="form-input" id="seller-date-of-birth" type="date" placeholder="Date of Birth">
+              <input class="form-input" id="seller-password" type="text" placeholder="Password">
+              <select id="seller-gender" class="form-input">
                 <option value="m">M</option>
                 <option value="f">F</option>
               </select>
-              <input class="form-input" id="admin-password" type="text" placeholder="Password">
+              <input class="form-input" id="seller-address" type="text" placeholder="Address">
             </div>
             <div class="col-2">
-              <label class="form-label" for="admin-last-name">Last Name:</label>
-              <label class="form-label" for="admin-date-of-birth">Date of Birth:</label>
-              <label class="form-label" for="admin-address">Address:</label>
-              <label class="form-label" for="admin-position">Position</label>
+              <label class="form-label" for="seller-last-name">Last Name:</label>
+              <label class="form-label" for="seller-unit-number">Unit Number:</label>
+              <label class="form-label" for="seller-market-id">Market ID</label>
+              <label class="form-label" for="seller-store-image">Store Image:</label>
             </div>
             <div class="col-4">
-              <input class="form-input" id="admin-last-name" type="text" placeholder="Last Name">
-              <input class="form-input" id="admin-date-of-birth" type="date" placeholder="Date of Birth">
-              <input class="form-input" id="admin-address" type="text" placeholder="Address">
-              <input class="form-input" id="admin-position" type="text" placeholder="Position">
+              <input class="form-input" id="seller-last-name" type="text" placeholder="Last Name">
+              <input class="form-input" id="seller-unit-number" type="text" placeholder="Unit Number">
+              <select id="seller-market-id" class="form-input">
+              </select>
+              <input class="form-input" id="seller-store-image" type="file" accept="image/*" onchange="loadFile(event)">
+              <img class="img-form" id="output"/>
             </div>
           </div>
           <div class="row">
             <div class="col-12">
-              <div class="add-button" onclick=updateAdmin()><i class="fa fa-save"></i> Update</div>
+              <div class="add-button" onclick=updateSeller()><i class="fa fa-save"></i> Update</div>
             </div>
           </div>
           </div>
