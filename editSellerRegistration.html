@@ -11,11 +11,11 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <link rel="icon" type="image/png" href="./img/wetmart_icon.png"/>
-    <title>Wetmart - Edit Seller</title>
+    <title>Wetmart - Edit Seller Registration</title>
     
 </head>
 
-<body onload="getMarketList(getStoreCategoryList,viewSeller);">
+<body onload="getMarketList(getStoreCategoryList,viewSellerRegistration);">
 
 <div class="wrapper">
   <div class="sidebar">
@@ -46,7 +46,7 @@
   <div class="main_content">
     <div class="header">
       <a href="home.html" id="home"><i class="fa fa-home"></i></a>
-      View/Edit Seller
+      View/Edit Seller Registration
       <a href="index.html" id="logout"><i class="fa fa-sign-out"></i> Logout</a>
     </div>  
     <div class="info">
@@ -54,14 +54,11 @@
         <div class="col-10 mx-auto" id="add-container">
           <div class="row">
             <div class="col-9">Seller</div>
-            <div class="col-3"> <div class="delete-button" onclick=deleteSeller()><i class="fa fa-trash"></i> Delete Seller</div></div>
           </div>
           <hr>
           <div class="row">
-            <div class="col-2">Seller ID: </div>
-            <div class="col-4" id="seller-id"></div>
-            <div class="col-2">Seller Rating: </div>
-            <div class="col-4" id="seller-rating"></div>
+            <div class="col-2">Pending Seller ID: </div>
+            <div class="col-4" id="pending-seller-id"></div>
           </div>
           <div class="row">
             <div class="col-2">
@@ -77,19 +74,19 @@
               <label class="form-label" for="seller-description">Description</label>
             </div>
             <div class="col-4">
-              <input class="form-input" id="seller-first-name" type="text" placeholder="First Name">
-              <input class="form-input" id="seller-store-name" type="text" placeholder="Store Name">
-              <input class="form-input" id="seller-email" type="email" placeholder="Email">
-              <input class="form-input" id="seller-mobile-number" type="text" placeholder="Mobile Number">
-              <input class="form-input" id="seller-date-of-birth" type="date" placeholder="Date of Birth">
-              <input class="form-input" id="seller-password" type="text" placeholder="Password">
-              <select id="seller-gender" class="form-input">
+              <input class="form-input" id="seller-first-name" type="text" placeholder="First Name" disabled="disabled">
+              <input class="form-input" id="seller-store-name" type="text" placeholder="Store Name" disabled="disabled">
+              <input class="form-input" id="seller-email" type="email" placeholder="Email" disabled="disabled">
+              <input class="form-input" id="seller-mobile-number" type="text" placeholder="Mobile Number" disabled="disabled">
+              <input class="form-input" id="seller-date-of-birth" type="date" placeholder="Date of Birth" disabled="disabled">
+              <input class="form-input" id="seller-password" type="text" placeholder="Password" disabled="disabled">
+              <select id="seller-gender" class="form-input" disabled="disabled">
                 <option value="m">M</option>
                 <option value="f">F</option>
               </select>
-              <input class="form-input" id="seller-address" type="text" placeholder="Address">
-              <select id="seller-store-category-id" class="form-input"></select>
-              <textarea class="form-input textarea-description" id="seller-description" type="text" placeholder="Description"></textarea>
+              <input class="form-input" id="seller-address" type="text" placeholder="Address" disabled="disabled">
+              <select id="seller-store-category-id" class="form-input" disabled="disabled"></select>
+              <textarea class="form-input textarea-description" id="seller-description" type="text" placeholder="Description" disabled="disabled"></textarea>
             </div>
             <div class="col-2">
               <label class="form-label" for="seller-last-name">Last Name:</label>
@@ -100,25 +97,25 @@
               <label class="form-label" for="seller-store-image">Store Image:</label>
             </div>
             <div class="col-4">
-              <input class="form-input" id="seller-last-name" type="text" placeholder="Last Name">
-              <input class="form-input" id="seller-unit-number" type="text" placeholder="Unit Number">
-              <select id="seller-market-id" class="form-input">
-              </select>
-              <select id="seller-bank" class="form-input">
+              <input class="form-input" id="seller-last-name" type="text" placeholder="Last Name" disabled="disabled">
+              <input class="form-input" id="seller-unit-number" type="text" placeholder="Unit Number" disabled="disabled">
+              <select id="seller-market-id" class="form-input" disabled="disabled"></select>
+              <select id="seller-bank" class="form-input" disabled="disabled">
                 <option value="OCBC">OCBC</option>
                 <option value="UOB">UOB</option>
                 <option value="DBS">DBS</option>
               </select>
-              <input class="form-input" id="seller-bank-account" type="text" placeholder="Bank Account">
-              <input class="form-input" id="seller-store-image" type="file" accept="image/*" onchange="loadFile(event)">
+              <input class="form-input" id="seller-bank-account" type="text" placeholder="Bank Account" disabled="disabled">
               <img class="img-form" id="output"/>
             </div>
           </div>
           <div class="row">
-            <div class="col-12">
-              <div class="add-button" onclick=updateSeller()><i class="fa fa-save"></i> Update</div>
+            <div class="col-9">
+              <div class="add-button" onclick=approveSeller()><i class="fa fa-check-circle"></i> Approve</div>
             </div>
-          </div>
+            <div class="col-3">
+              <div class="delete-button" onclick=rejectSeller()><i class="fa fa-times-circle"></i> Reject</div></div>
+            </div>
           </div>
         </div>
       </div>

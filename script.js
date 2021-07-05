@@ -13,6 +13,20 @@ function formatDate(date) {
   return [year, month, day].join('-');
 };
 
+function booleanToString(bool){
+  if(bool){
+    return "Yes";
+  }
+  else{
+    return "No"
+  }
+}
+
+var currencyFormatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+});
+
 function getQueryVariable(variable) {
   var query = window.location.search.substring(1);
   var vars = query.split("&");
@@ -32,6 +46,9 @@ var loadFile = function(event) {
     URL.revokeObjectURL(output.src) // free memory
   };
 };
+
+
+
 
 /* Login */
 function login() {
@@ -572,7 +589,7 @@ function updateMarket(){
 };
 
 /* Get market list */
-async function getMarketList(){
+function getMarketList(callback1,callback2){
 
   var toChange = "";
   var sellerMarketList = document.getElementById("seller-market-id");
@@ -585,6 +602,12 @@ async function getMarketList(){
       toChange += `<option value="`+response[i].market_id+`">`+response[i].market_name+" ("+response[i].market_id+`)</option>`
     }
     sellerMarketList.innerHTML = toChange;
+    return;
+  })
+  .then(function(){
+    if(callback1){
+      callback1(callback2);
+    };
   })
   .catch(error => {
     alert(error.message)
@@ -592,6 +615,31 @@ async function getMarketList(){
   });
 };
 
+function getStoreCategoryList(callback){
+
+  var toChange = "";
+  var sellerStoreCategoryList = document.getElementById("seller-store-category-id");
+  fetch(host+'/admin/seller/store_category_list')
+  .then(response=>{
+    return response.json();
+  })
+  .then(response=>{
+    for (i=0; i < response.length; i++){
+      toChange += `<option value="`+response[i].store_category_id+`">`+response[i].category_name+" ("+response[i].store_category_id+`)</option>`
+    }
+    sellerStoreCategoryList.innerHTML = toChange;
+    return;
+  })
+  .then(function(){
+    if(callback){
+      callback();
+    };
+  })
+  .catch(error => {
+    alert(error.message)
+    console.log(error);
+  });
+};
 
 /* View all Seller & search */
 function seller(search){
@@ -655,9 +703,13 @@ function addSeller(){
   const password = document.getElementById("seller-password").value;
   const gender = document.getElementById("seller-gender").value;
   const address = document.getElementById("seller-address").value;
+  const store_category_id = document.getElementById("seller-store-category-id").value;
+  const description = document.getElementById("seller-description").value;
   const last_name = document.getElementById("seller-last-name").value;
   const unit_number = document.getElementById("seller-unit-number").value;
   const market_id = document.getElementById("seller-market-id").value;
+  const bank = document.getElementById("seller-bank").value;
+  const bank_account = document.getElementById("seller-bank-account").value;
   const image = document.getElementById("seller-store-image").files[0];
   const fd = new FormData();
   fd.append("first_name",first_name);
@@ -668,11 +720,14 @@ function addSeller(){
   fd.append("password",password);
   fd.append("gender",gender);
   fd.append("address",address);
+  fd.append("store_category_id",store_category_id);
+  fd.append("description",description);
   fd.append("last_name",last_name);
   fd.append("unit_number",unit_number);
   fd.append("market_id",market_id);
+  fd.append("bank",bank);
+  fd.append("bank_account",bank_account);
   fd.append("image", image);
-
 
   fetch(host+`/admin/seller`, {
     method: 'POST',
@@ -703,7 +758,7 @@ function editSeller(sellerId){
   window.location = './editSeller.html?seller_id='+sellerId;
 };
 
-/* View Market Details */
+/* View Seller Details */
 function viewSeller(){
   var seller_id = getQueryVariable("seller_id");
   fetch(host+`/admin/view_seller?seller_id=`+seller_id)
@@ -723,10 +778,14 @@ function viewSeller(){
     document.getElementById("seller-date-of-birth").value = formatDate(response[0].date_of_birth);
     document.getElementById("seller-password").value = response[0].password;
     document.getElementById("seller-gender").value = response[0].gender;
+    document.getElementById("seller-store-category-id").value = response[0].store_category_id;
+    document.getElementById("seller-description").value = response[0].store_description;
     document.getElementById("seller-address").value = response[0].address;
     document.getElementById("seller-last-name").value = response[0].last_name;
     document.getElementById("seller-unit-number").value = response[0].unit_number;
     document.getElementById("seller-market-id").value = response[0].market_id;
+    document.getElementById("seller-bank").value = response[0].bank;
+    document.getElementById("seller-bank-account").value = response[0].bank_account;
     document.getElementById("output").src = response[0].store_image_id;
   })
   .catch(error => {
@@ -769,9 +828,13 @@ function updateSeller(){
   const password = document.getElementById("seller-password").value;
   const gender = document.getElementById("seller-gender").value;
   const address = document.getElementById("seller-address").value;
+  const store_category_id = document.getElementById("seller-store-category-id").value;
+  const description = document.getElementById("seller-description").value;
   const last_name = document.getElementById("seller-last-name").value;
   const unit_number = document.getElementById("seller-unit-number").value;
   const market_id = document.getElementById("seller-market-id").value;
+  const bank = document.getElementById("seller-bank").value;
+  const bank_account = document.getElementById("seller-bank-account").value;
   const image = document.getElementById("seller-store-image").files[0];
   const fd = new FormData();
   fd.append("seller_id",seller_id);
@@ -783,8 +846,12 @@ function updateSeller(){
   fd.append("password",password);
   fd.append("gender",gender);
   fd.append("address",address);
+  fd.append("store_category_id",store_category_id);
+  fd.append("description",description);
   fd.append("last_name",last_name);
   fd.append("unit_number",unit_number);
+  fd.append("bank",bank);
+  fd.append("bank_account",bank_account);
   fd.append("market_id",market_id);
   fd.append("image", image);
 
@@ -797,6 +864,668 @@ function updateSeller(){
     if(response.status == 200){
       alert("Seller "+seller_id+" has been updated!")
       window.location = "./seller.html"
+    }
+  })
+  .catch(error => {
+    alert(error.message)
+    console.log(error);
+  });
+};
+
+/* View all Product & search */
+function product(search){
+
+  var productTableBody = document.getElementById("product-table-body");
+  fetch(host+`/admin/product?search=`+search)
+    .then(response => {
+      return response.json();
+    })
+    .then(response=> {
+      var toChange = `
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Product Image</th>
+            <th>Product ID</th>
+            <th>Product Name</th>
+            <th>Seller ID</th>
+            <th>Store Name</th>
+            <th>Category</th>
+            <th>Availability</th>
+            <th>Price</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+      `;
+      for (i=0; i<response.length; i++){
+        toChange += 
+        `
+        <tr>
+          <td><img class="img-table" src="`+response[i].product_image_id+`" alt="Store Image"/></td>
+          <td>`+response[i].product_id+`</td>
+          <td>`+response[i].product_name+`</td>
+          <td>`+response[i].seller_id+`</td>
+          <td>`+response[i].store_name+`</td>
+          <td>`+response[i].category_name+`</td>
+          <td>`+booleanToString(response[i].availability)+`</td>
+          <td>`+currencyFormatter.format(response[i].price)+`</td>
+          <td><div class="view-edit" onclick="editProduct(`+response[i].product_id+`)">View/Edit</div></td>
+        </tr>
+        `
+      }
+      toChange += 
+      `        
+        </tbody>
+      </table>
+      `;
+      productTableBody.innerHTML = toChange ;
+    })
+    .catch(error => {
+      alert(error.message)
+      console.log(error.message)
+      console.log(error);
+    });
+};
+
+/* Get seller list */
+function getSellerList(callback1,callback2){
+  var toChange = "";
+  var productSellerList = document.getElementById("product-seller-id");
+  fetch(host+'/admin/product/seller_list')
+  .then(function(response){
+    return response.json();
+  })
+  .then(function(response){
+    for (i=0; i < response.length; i++){
+      toChange += `<option value="`+response[i].seller_id+`">`+response[i].store_name+" ("+response[i].seller_id+`)</option>`
+    }
+    productSellerList.innerHTML = toChange;
+    return;
+  })
+  .then(function(){
+    if(callback1){
+      callback1(callback2);
+    }
+  })
+  .catch(error => {
+    alert(error.message)
+    console.log(error);
+  });
+};
+
+/* Get category list */
+function getCategoryList(callback){
+  var toChange = "";
+  var productCategoryList = document.getElementById("product-category-id");
+  fetch(host+'/admin/product/category_list')
+  .then(function(response){
+    return response.json();
+  })
+  .then(function(response){
+    for (i=0; i < response.length; i++){
+      toChange += `<option value="`+response[i].product_category_id+`">`+response[i].category_name+" ("+response[i].product_category_id+`)</option>`
+    }
+    productCategoryList.innerHTML = toChange;
+    return;
+  })
+  .then(function(){
+    if(callback){
+      callback();
+    };
+  })
+  .catch(error => {
+    alert(error.message)
+    console.log(error);
+  });
+};
+
+/* Add Product */
+function addProduct(){
+  const seller_id = document.getElementById("product-seller-id").value;
+  const product_name = document.getElementById("product-name").value;
+  const availability = document.getElementById("product-availability").value;
+  const price = parseFloat(document.getElementById("product-price").value);
+  const product_description = document.getElementById("product-description").value;
+  const weight = parseFloat(document.getElementById("product-weight").value);
+  const product_category_id = document.getElementById("product-category-id").value;
+  const image = document.getElementById("product-image").files[0];
+  const fd = new FormData();
+  fd.append("seller_id",seller_id);
+  fd.append("product_name",product_name);
+  fd.append("availability",availability);
+  fd.append("price",price);
+  fd.append("product_description",product_description);
+  fd.append("weight",weight);
+  fd.append("product_category_id",product_category_id);
+  fd.append("image", image);
+
+  fetch(host+`/admin/product`, {
+    method: 'POST',
+    header:{'Content-Type':'multipart/form-data'},
+    body: fd
+  })
+  .then(response => {
+    if(response.status == 201){
+      alert("Product has been created!")
+      window.location = "./product.html"
+    }
+    else if(response.status == 400){
+      return response.json()
+      .then(response => {
+        alert(response.message)
+      })
+    }
+  })
+  .catch(error => {
+    console.log(error.message)
+    console.log(error);
+  });
+};
+
+/* Redirect to view/edit product */
+function editProduct(productId){
+  window.location = './editProduct.html?product_id='+productId;
+};
+
+/* View Product Details */
+function viewProduct(){
+  var product_id = getQueryVariable("product_id");
+  fetch(host+`/admin/view_product?product_id=`+product_id)
+  .then(response => {
+    return response.json();
+  })
+  .then(response => {
+    if(response.status == 404){
+      throw response;
+    }
+    document.getElementById("product-id").innerHTML = product_id;
+    document.getElementById("product-seller-id").value = response[0].seller_id;
+    document.getElementById("product-name").value = response[0].product_name;
+    document.getElementById("product-availability").value = response[0].availability;
+    document.getElementById("product-price").value = response[0].price;
+    document.getElementById("product-description").value = response[0].product_description;
+    document.getElementById("product-weight").value = response[0].weight;
+    document.getElementById("product-category-id").value = response[0].product_category_id;
+    document.getElementById("output").src = response[0].product_image_id;
+  })
+  .catch(error => {
+    alert(error.message)
+    console.log(error);
+  });
+};
+
+/* Delete product */
+function deleteProduct(){
+  var product_id = getQueryVariable("product_id");
+  fetch(host+`/admin/delete_product?product_id=`+product_id, {
+    method: 'DELETE'
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(response => {
+    if(response.status == 404){
+      throw response;
+    }
+    alert("Product "+product_id+" has been deleted!")
+    window.location = "./product.html"
+  })
+  .catch(error => {
+    alert(error.message)
+    console.log(error);
+  });
+};
+
+/* Update Product */
+function updateProduct(){
+
+  const product_id = getQueryVariable("product_id");
+  const seller_id = document.getElementById("product-seller-id").value;
+  const product_name = document.getElementById("product-name").value;
+  const availability = document.getElementById("product-availability").value;
+  const price = parseFloat(document.getElementById("product-price").value);
+  const product_description = document.getElementById("product-description").value;
+  const weight = parseFloat(document.getElementById("product-weight").value);
+  const product_category_id = document.getElementById("product-category-id").value;
+  const image = document.getElementById("product-image").files[0];
+  const fd = new FormData();
+  fd.append("product_id",product_id);
+  fd.append("seller_id",seller_id);
+  fd.append("product_name",product_name);
+  fd.append("availability",availability);
+  fd.append("price",price);
+  fd.append("product_description",product_description);
+  fd.append("weight",weight);
+  fd.append("product_category_id",product_category_id);
+  fd.append("image", image);
+
+  fetch(host+`/admin/product`, {
+    method: 'PUT',
+    header:{'Content-Type':'multipart/form-data'},
+    body: fd
+  })
+  .then(response => {
+    if(response.status == 200){
+      alert("Product "+product_id+" has been updated!")
+      window.location = "./product.html"
+    }
+  })
+  .catch(error => {
+    alert(error.message)
+    console.log(error);
+  });
+};
+
+/* View all Product Category & search */
+function productCategory(search){
+
+  var productCategoryTableBody = document.getElementById("product-category-table-body");
+  fetch(host+`/admin/product_category?search=`+search)
+    .then(response => {
+      return response.json();
+    })
+    .then(response=> {
+      var toChange = `
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Product Category ID</th>
+            <th>Category Name</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+      `;
+      for (i=0; i<response.length; i++){
+        toChange += 
+        `
+        <tr>
+          <td>`+response[i].product_category_id+`</td>
+          <td>`+response[i].category_name+`</td>
+          <td><div class="view-edit" onclick="editProductCategory(`+response[i].product_category_id+`)">View/Edit</div></td>
+        </tr>
+        `
+      }
+      toChange += 
+      `        
+        </tbody>
+      </table>
+      `;
+      productCategoryTableBody.innerHTML = toChange ;
+    })
+    .catch(error => {
+      alert(error.message)
+      console.log(error.message)
+      console.log(error);
+    });
+};
+
+/* Add Product Category */
+function addProductCategory(){
+  const category_name = document.getElementById("product-category-name").value;
+
+  fetch(host+`/admin/product_category`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({"category_name":category_name})
+  })
+  .then(response => {
+    if(response.status == 201){
+      alert("Product Category has been created!")
+      window.location = "./productCategory.html"
+    }
+  })
+  .catch(error => {
+    console.log(error.message)
+    console.log(error);
+  });
+};
+
+/* Redirect to view/edit product category */
+function editProductCategory(productCategoryId){
+  window.location = './editProductCategory.html?product_category_id='+productCategoryId;
+};
+
+/* View Product Category Details */
+function viewProductCategory(){
+  var product_category_id = getQueryVariable("product_category_id");
+  fetch(host+`/admin/view_product_category?product_category_id=`+product_category_id)
+  .then(response => {
+    return response.json();
+  })
+  .then(response => {
+    if(response.status == 404){
+      throw response;
+    }
+    document.getElementById("product-category-id").innerHTML = product_category_id;
+    document.getElementById("product-category-name").value = response[0].category_name;
+  })
+  .catch(error => {
+    alert(error.message)
+    console.log(error);
+  });
+};
+
+/* Delete product category */
+function deleteProductCategory(){
+  var product_category_id = getQueryVariable("product_category_id");
+  fetch(host+`/admin/delete_product_category?product_category_id=`+product_category_id, {
+    method: 'DELETE'
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(response => {
+    if(response.status == 404){
+      throw response;
+    }
+    alert("Product Category "+product_category_id+" has been deleted!")
+    window.location = "./productCategory.html"
+  })
+  .catch(error => {
+    alert(error.message)
+    console.log(error);
+  });
+};
+
+/* Update Product Category */
+function updateProductCategory(){
+
+  var product_category_id = getQueryVariable("product_category_id");
+  const category_name = document.getElementById("product-category-name").value;
+
+  fetch(host+`/admin/product_category`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({"product_category_id":product_category_id,"category_name": category_name})
+  })
+  .then(response => {
+    if(response.status == 200){
+      alert("Product Category "+product_category_id+" has been updated!")
+      window.location = "./productCategory.html"
+    }
+  })
+  .catch(error => {
+    alert(error.message)
+    console.log(error);
+  });
+};
+
+/* View all Seller & search */
+function registration(search){
+
+  var sellerRegistrationTableBody = document.getElementById("seller-registration-table-body");
+  fetch(host+`/admin/pending_seller?search=`+search)
+    .then(response => {
+      return response.json();
+    })
+    .then(response=> {
+      var toChange = `
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Store Image</th>
+            <th>Pending Seller ID</th>
+            <th>Store Name</th>
+            <th>Email</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+      `;
+      for (i=0; i<response.length; i++){
+        toChange += 
+        `
+        <tr>
+          <td><img class="img-table" src="`+response[i].store_image_id+`" alt="Store Image"/></td>
+          <td>`+response[i].pending_seller_id+`</td>
+          <td>`+response[i].store_name+`</td>
+          <td>`+response[i].email+`</td>
+          <td>`+response[i].first_name+`</td>
+          <td>`+response[i].last_name+`</td>
+          <td><div class="view-edit" onclick="editSellerRegistration(`+response[i].pending_seller_id+`)">View/Edit</div></td>
+        </tr>
+        `
+      }
+      toChange += 
+      `        
+        </tbody>
+      </table>
+      `;
+      sellerRegistrationTableBody.innerHTML = toChange ;
+    })
+    .catch(error => {
+      alert(error.message)
+      console.log(error.message)
+      console.log(error);
+    });
+};
+
+/* Redirect to view/edit seller */
+function editSellerRegistration(pendingSellerId){
+  window.location = './editSellerRegistration.html?pending_seller_id='+pendingSellerId;
+};
+
+/* View Seller Registration Details */
+function viewSellerRegistration(){
+  var pending_seller_id = getQueryVariable("pending_seller_id");
+  fetch(host+`/admin/view_pending_seller?pending_seller_id=`+pending_seller_id)
+  .then(response => {
+    return response.json();
+  })
+  .then(response => {
+    if(response.status == 404){
+      throw response;
+    }
+    document.getElementById("pending-seller-id").innerHTML = pending_seller_id
+    document.getElementById("seller-first-name").value = response[0].first_name;
+    document.getElementById("seller-store-name").value = response[0].store_name;
+    document.getElementById("seller-email").value = response[0].email;
+    document.getElementById("seller-mobile-number").value = response[0].mobile_number;
+    document.getElementById("seller-date-of-birth").value = formatDate(response[0].date_of_birth);
+    document.getElementById("seller-password").value = response[0].password;
+    document.getElementById("seller-gender").value = response[0].gender;
+    document.getElementById("seller-address").value = response[0].address;
+    document.getElementById("seller-store-category-id").value = response[0].store_category_id;
+    document.getElementById("seller-description").value = response[0].store_description;
+    document.getElementById("seller-last-name").value = response[0].last_name;
+    document.getElementById("seller-unit-number").value = response[0].unit_number;
+    document.getElementById("seller-market-id").value = response[0].market_id;
+    document.getElementById("seller-bank").value = response[0].bank;
+    document.getElementById("seller-bank-account").value = response[0].bank_account;
+    document.getElementById("output").src = response[0].store_image_id;
+  })
+  .catch(error => {
+    alert(error.message)
+    console.log(error);
+  });
+};
+
+/* Reject pending seller registration */
+function approveSeller(){
+  var pending_seller_id = getQueryVariable("pending_seller_id");
+
+  fetch(host+`/admin/approve_pending_seller`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({"pending_seller_id":pending_seller_id})
+  })
+  .then(response => {
+    if(response.status == 200){
+      alert("Pending Seller "+pending_seller_id+" has been approved!")
+      window.location = "./sellerRegistration.html"
+    }
+  })
+  .catch(error => {
+    alert(error.message)
+    console.log(error);
+  });
+}
+
+/* Reject pending seller registration */
+function rejectSeller(){
+  var pending_seller_id = getQueryVariable("pending_seller_id");
+
+  fetch(host+`/admin/reject_pending_seller`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({"pending_seller_id":pending_seller_id})
+  })
+  .then(response => {
+    if(response.status == 200){
+      alert("Pending Seller "+pending_seller_id+" has been rejected!")
+      window.location = "./sellerRegistration.html"
+    }
+  })
+  .catch(error => {
+    alert(error.message)
+    console.log(error);
+  });
+}
+
+/* View all Store Category & search */
+function storeCategory(search){
+
+  var storeCategoryTableBody = document.getElementById("store-category-table-body");
+  fetch(host+`/admin/store_category?search=`+search)
+    .then(response => {
+      return response.json();
+    })
+    .then(response=> {
+      var toChange = `
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Store Category ID</th>
+            <th>Category Name</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+      `;
+      for (i=0; i<response.length; i++){
+        toChange += 
+        `
+        <tr>
+          <td>`+response[i].store_category_id+`</td>
+          <td>`+response[i].category_name+`</td>
+          <td><div class="view-edit" onclick="editStoreCategory(`+response[i].store_category_id+`)">View/Edit</div></td>
+        </tr>
+        `
+      }
+      toChange += 
+      `        
+        </tbody>
+      </table>
+      `;
+      storeCategoryTableBody.innerHTML = toChange ;
+    })
+    .catch(error => {
+      alert(error.message)
+      console.log(error.message)
+      console.log(error);
+    });
+};
+
+/* Redirect to view/edit store category */
+function editStoreCategory(storeCategoryId){
+  window.location = './editStoreCategory.html?store_category_id='+storeCategoryId;
+};
+
+/* Add Store Category */
+function addStoreCategory(){
+  const category_name = document.getElementById("store-category-name").value;
+
+  fetch(host+`/admin/store_category`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({"category_name":category_name})
+  })
+  .then(response => {
+    if(response.status == 201){
+      alert("Store Category has been created!")
+      window.location = "./storeCategory.html"
+    }
+  })
+  .catch(error => {
+    console.log(error.message)
+    console.log(error);
+  });
+};
+
+/* View Store Category Details */
+function viewStoreCategory(){
+  var store_category_id = getQueryVariable("store_category_id");
+  fetch(host+`/admin/view_store_category?store_category_id=`+store_category_id)
+  .then(response => {
+    return response.json();
+  })
+  .then(response => {
+    if(response.status == 404){
+      throw response;
+    }
+    document.getElementById("store-category-id").innerHTML = store_category_id;
+    document.getElementById("store-category-name").value = response[0].category_name;
+  })
+  .catch(error => {
+    alert(error.message)
+    console.log(error);
+  });
+};
+
+/* Delete Store category */
+function deleteStoreCategory(){
+  var store_category_id = getQueryVariable("store_category_id");
+  fetch(host+`/admin/delete_store_category?store_category_id=`+store_category_id, {
+    method: 'DELETE'
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(response => {
+    if(response.status == 404){
+      throw response;
+    }
+    alert("Store Category "+store_category_id+" has been deleted!")
+    window.location = "./storeCategory.html"
+  })
+  .catch(error => {
+    alert(error.message)
+    console.log(error);
+  });
+};
+
+
+/* Update Store Category */
+function updateStoreCategory(){
+
+  var store_category_id = getQueryVariable("store_category_id");
+  const category_name = document.getElementById("store-category-name").value;
+
+  fetch(host+`/admin/store_category`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({"store_category_id":store_category_id,"category_name": category_name})
+  })
+  .then(response => {
+    if(response.status == 200){
+      alert("Store Category "+store_category_id+" has been updated!")
+      window.location = "./storeCategory.html"
     }
   })
   .catch(error => {

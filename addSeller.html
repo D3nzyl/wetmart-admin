@@ -15,7 +15,7 @@
     
 </head>
 
-<body onload="getMarketList()">
+<body onload="getMarketList(getStoreCategoryList);">
 
 <div class="wrapper">
   <div class="sidebar">
@@ -27,16 +27,17 @@
           <li class="nav-title">Seller</li>
           <li><a href="seller.html"><i class="fa fa-user"></i>View/Edit Seller</a></li>
           <li><a href="addSeller.html"><i class="fa fa-plus-circle"></i>Add Seller</a></li>
-          <li><a href="registration.html"><i class="fa fa-check-circle"></i>View Seller Registration</a></li>
+          <li><a href="sellerRegistration.html"><i class="fa fa-check-circle"></i>View Seller Registration</a></li>
+          <li><a href="storeCategory.html"><i class="fa fa-archive"></i>View/Edit Store Category</a></li>
           <li class="nav-title">Products</li>
           <li><a href="product.html"><i class="fa fa-th-large"></i>View/Edit Product</a></li>
           <li><a href="addProduct.html"><i class="fa fa-plus-circle"></i>Add Product</a></li>
+          <li><a href="productCategory.html"><i class="fa fa-archive"></i>View/Edit Product Category</a></li>
           <li class="nav-title">Orders</li>
           <li><a href="openOrder.html"><i class="fa fa-folder-open"></i>View/Edit Open Orders</a></li>
           <li><a href="closeOrder.html"><i class="fa fa-folder"></i>View Close Order</a></li>
           <li class="nav-title">Others</li>
           <li><a href="admin.html"><i class="fa fa-user"></i>View/Edit Admin</a></li>
-          <li><a href="addAdmin.html"><i class="fa fa-plus-circle"></i>Add Admin</a></li>
           <li><a href="market.html"><i class="fa fa-shopping-basket"></i>View/Edit Market</a></li>
           <li><a href="rating.html"><i class="fa fa-star"></i>View Rating Detials</a></li>
           <li><a href="finance.html"><i class="fa fa-dollar"></i>View/Edit Finance</a></li>
@@ -65,6 +66,8 @@
               <label class="form-label" for="seller-password">Password:</label>
               <label class="form-label" for="seller-gender">Gender:</label>
               <label class="form-label" for="seller-address">Address</label>
+              <label class="form-label" for="seller-store-category-id">Store Category:</label>
+              <label class="form-label" for="seller-description">Description</label>
             </div>
             <div class="col-4">
               <input class="form-input" id="seller-first-name" type="text" placeholder="First Name" value="test1">
@@ -78,11 +81,15 @@
                 <option value="f">F</option>
               </select>
               <input class="form-input" id="seller-address" type="text" placeholder="Address" value="test address">
+              <select id="seller-store-category-id" class="form-input"></select>
+              <textarea class="form-input textarea-description" id="seller-description" type="text" placeholder="Description"></textarea>
             </div>
             <div class="col-2">
               <label class="form-label" for="seller-last-name">Last Name:</label>
               <label class="form-label" for="seller-unit-number">Unit Number:</label>
               <label class="form-label" for="seller-market-id">Market ID</label>
+              <label class="form-label" for="seller-bank">Bank:</label>
+              <label class="form-label" for="seller-bank-account">Bank Account:</label>
               <label class="form-label" for="seller-store-image">Store Image:</label>
             </div>
             <div class="col-4">
@@ -90,6 +97,12 @@
               <input class="form-input" id="seller-unit-number" type="text" placeholder="Unit Number" value="01-123">
               <select id="seller-market-id" class="form-input">
               </select>
+              <select id="seller-bank" class="form-input">
+                <option value="OCBC">OCBC</option>
+                <option value="UOB">UOB</option>
+                <option value="DBS">DBS</option>
+              </select>
+              <input class="form-input" id="seller-bank-account" type="text" placeholder="Bank Account" value="123-123456-123">
               <input class="form-input" id="seller-store-image" type="file" accept="image/*" onchange="loadFile(event)">
               <img class="img-form" id="output"/>
             </div>

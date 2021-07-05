@@ -11,11 +11,11 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <link rel="icon" type="image/png" href="./img/wetmart_icon.png"/>
-    <title>Wetmart - View/Edit Admin</title>
+    <title>Wetmart - View/Edit Store Category</title>
     
 </head>
 
-<body onload="market('');">
+<body onload="storeCategory('');">
 
 <div class="wrapper">
   <div class="sidebar">
@@ -46,22 +46,22 @@
   <div class="main_content">
     <div class="header">
       <a href="home.html" id="home"><i class="fa fa-home"></i></a>
-      View/Edit Market
+      View/Edit Store Category
       <a href="index.html" id="logout"><i class="fa fa-sign-out"></i> Logout</a>
     </div>  
     <div class="info">
       <div class="row">
         <div class="col-6">
           <label id="searchbar-label" for="searchbar">Search:</label>
-          <input id="searchbar" type="text" placeholder="Market Name...">
-          <i id="searchbar-icon" onclick="market(document.getElementById('searchbar').value)" class="fa fa-search"></i>
+          <input id="searchbar" type="text" placeholder="Category Name...">
+          <i id="searchbar-icon" onclick="storeCategory(document.getElementById('searchbar').value)" class="fa fa-search"></i>
         </div>
         <div class="col-3">
-          <div id="add-new-button" onclick="window.location = './addMarket.html'"><i class="fa fa-plus-circle"></i> Add Market</div>
+          <div id="add-new-button" onclick="window.location = './addStoreCategory.html'"><i class="fa fa-plus-circle"></i> Add Store Category</div>
         </div>
       </div>
       <div class="row">
-        <div class="col-12 mx-auto" id="market-table-body">
+        <div class="col-12 mx-auto" id="store-category-table-body">
         </div>
       </div>
     </div>
