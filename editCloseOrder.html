@@ -15,7 +15,7 @@
     
 </head>
 
-<body onload="closeOrder('');">
+<body onload="viewCloseOrder();">
 
 <div class="wrapper">
   <div class="sidebar">
@@ -51,14 +51,49 @@
     </div>  
     <div class="info">
       <div class="row">
-        <div class="col-6">
-          <label id="searchbar-label" for="searchbar">Search:</label>
-          <input id="searchbar" type="text" placeholder="Customer Name...">
-          <i id="searchbar-icon" onclick="closeOrder(document.getElementById('searchbar').value)" class="fa fa-search"></i>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12 mx-auto" id="close-order-table-body">
+        <div class="col-10 mx-auto" id="add-container">
+          <div class="row">
+            <div class="col-12">Close Order</div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-2">Order ID: </div>
+            <div class="col-4" id="order-id"></div>
+            <div class="col-2">Customer ID: </div>
+            <div class="col-4" id="order-customer-id"></div>
+          </div>
+          <div class="row">
+            <div class="col-2">
+              <label class="form-label" for="order-delivery-id">Deliver ID:</label>
+              <label class="form-label" for="order-postal-code">Postal Code:</label>
+              <label class="form-label" for="order-mobile-number">Mobile Number:</label>
+              <label class="form-label" for="order-date-of-order">Date of Order:</label>
+            </div>
+            <div class="col-4">
+              <input class="form-input" id="order-delivery-id" type="text" placeholder="Delivery ID" disabled="disabled">
+              <input class="form-input" id="order-postal-code" type="text" placeholder="Postal Code" disabled="disabled">
+              <input class="form-input" id="order-mobile-number" type="text" placeholder="Mobile Number" disabled="disabled">
+              <input class="form-input" id="order-date-of-order" type="date" placeholder="Date of Order" disabled="disabled">
+            </div>
+            <div class="col-2">
+              <label class="form-label" for="order-date-to-deliver">Date to Deliver:</label>
+              <label class="form-label" for="order-status">Order Status:</label>
+              <label class="form-label" for="order-delivery-fee">Delivery Fee:</label>
+            </div>
+            <div class="col-4">
+              <input class="form-input" id="order-date-to-deliver" type="date" placeholder="Date to Deliver" disabled="disabled">
+              <input class="form-input" id="order-status" type="text" placeholder="Status" disabled="disabled">
+              <input class="form-input" id="order-delivery-fee" type="text" placeholder="Delivery Fee" disabled="disabled">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12 mx-auto" id="edit-close-order-table-body"></div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <div class="add-button" onclick="editCustomer(document.getElementById('order-customer-id').innerText)"><i class="fa fa-search"></i> View Customer</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

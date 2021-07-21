@@ -11,11 +11,11 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <link rel="icon" type="image/png" href="./img/wetmart_icon.png"/>
-    <title>Wetmart - View Close Order</title>
+    <title>Wetmart - Edit Rating</title>
     
 </head>
 
-<body onload="closeOrder('');">
+<body onload="viewRating();">
 
 <div class="wrapper">
   <div class="sidebar">
@@ -46,19 +46,42 @@
   <div class="main_content">
     <div class="header">
       <a href="home.html" id="home"><i class="fa fa-home"></i></a>
-      View Close Order
+      View/Edit Rating
       <a href="index.html" id="logout"><i class="fa fa-sign-out"></i> Logout</a>
     </div>  
     <div class="info">
       <div class="row">
-        <div class="col-6">
-          <label id="searchbar-label" for="searchbar">Search:</label>
-          <input id="searchbar" type="text" placeholder="Customer Name...">
-          <i id="searchbar-icon" onclick="closeOrder(document.getElementById('searchbar').value)" class="fa fa-search"></i>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12 mx-auto" id="close-order-table-body">
+        <div class="col-10 mx-auto" id="add-container">
+          <div class="row">
+            <div class="col-9">Rating</div>
+            <div class="col-3"> <div class="delete-button" onclick=deleteRating()><i class="fa fa-trash"></i> Delete Rating</div></div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-2">Rating ID: </div>
+            <div class="col-4" id="rating-id"></div>
+          </div>
+          <div class="row">
+            <div class="col-2">
+              <label class="form-label" for="rating-seller-id">Seller ID:</label>
+              <label class="form-label" for="rating-customer-id">Customer ID:</label>
+              <label class="form-label" for="rating-order-id">Order ID:</label>
+              <label class="form-label" for="rating-rating">Rating:</label>
+            </div>
+            <div class="col-4">
+              <input class="form-input" id="rating-seller-id" type="text" placeholder="Seller ID" disabled="disabled">
+              <input class="form-input" id="rating-customer-id" type="text" placeholder="Customer ID" disabled="disabled">
+              <input class="form-input" id="rating-order-id" type="text" placeholder="Order ID" disabled="disabled">
+              <input class="form-input" id="rating-rating" type="number" min="1" max="5" placeholder="Rating">
+
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <div class="add-button" onclick=updateRating()><i class="fa fa-save"></i> Update</div>
+            </div>
+          </div>
+          </div>
         </div>
       </div>
     </div>

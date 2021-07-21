@@ -1000,6 +1000,9 @@ function addProduct(){
   fd.append("product_category_id",product_category_id);
   fd.append("image", image);
 
+  console.log(image)
+  console.log(fd)
+
   fetch(host+`/admin/product`, {
     method: 'POST',
     header:{'Content-Type':'multipart/form-data'},
@@ -1530,6 +1533,486 @@ function updateStoreCategory(){
   })
   .catch(error => {
     alert(error.message)
+    console.log(error);
+  });
+};
+
+/* View all Close Order & search */
+function closeOrder(search){
+
+  var closeOrderTableBody = document.getElementById("close-order-table-body");
+  fetch(host+`/admin/close_order?search=`+search)
+    .then(response => {
+      return response.json();
+    })
+    .then(response=> {
+      var toChange = `
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Delivery ID</th>
+            <th>Customer ID</th>
+            <th>Customer Name</th>
+            <th>Date of Order</th>
+            <th>Total Price</th>
+            <th>Total Quantity</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+      `;
+      for (i=0; i<response.length; i++){
+        toChange += 
+        `
+        <tr>
+          <td>`+response[i].order_id+`</td>
+          <td>`+response[i].delivery_id+`</td>
+          <td>`+response[i].customer_id+`</td>
+          <td>`+response[i].customer_name+`</td>
+          <td>`+response[i].date_of_order+`</td>
+          <td>`+response[i].total_price+`</td>
+          <td>`+response[i].total_quantity+`</td>
+          <td><div class="view-edit" onclick="editCloseOrder(`+response[i].order_id+`)">View</div></td>
+        </tr>
+        `
+      }
+      toChange += 
+      `        
+        </tbody>
+      </table>
+      `;
+      closeOrderTableBody.innerHTML = toChange ;
+    })
+    .catch(error => {
+      alert(error.message)
+      console.log(error.message)
+      console.log(error);
+    });
+};
+
+/* Redirect to view/edit store category */
+function editCloseOrder(orderId){
+  window.location = './editCloseOrder.html?order_id='+orderId;
+};
+
+/* View Store Category Details */
+function viewCloseOrder(){
+  var order_id = getQueryVariable("order_id");
+  fetch(host+`/admin/view_close_order?order_id=`+order_id)
+  .then(response => {
+    return response.json();
+  })
+  .then(response => {
+    if(response.status == 404){
+      throw response;
+    }
+    document.getElementById("order-id").innerHTML = order_id
+    document.getElementById("order-customer-id").innerHTML = response[0][0].customer_id;
+    document.getElementById("order-delivery-id").value = response[0][0].delivery_id;
+    document.getElementById("order-postal-code").value = response[0][0].postal_code;
+    document.getElementById("order-mobile-number").value = response[0][0].mobile_number;
+    document.getElementById("order-date-of-order").value = formatDate(response[0][0].date_of_order);
+    document.getElementById("order-date-to-deliver").value = formatDate(response[0][0].date_to_deliver);
+    document.getElementById("order-status").value = response[0][0].order_status;
+    document.getElementById("order-delivery-fee").value = response[0][0].delivery_fee;
+
+    
+    var editCloseOrderTableBody = document.getElementById("edit-close-order-table-body");
+    var toChange = `
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Order Detail ID</th>
+          <th>Seller ID</th>
+          <th>Product ID</th>
+          <th>Product Name</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Weight</th>
+          <th>Total Price</th>
+          <th>Action<th>
+        </tr>
+      </thead>
+      <tbody>
+    `;
+    for (i=0; i<response[1].length; i++){
+      toChange += 
+      `
+      <tr>
+        <td>`+response[1][i].order_detail_id+`</td>
+        <td>`+response[1][i].seller_id+`</td>
+        <td>`+response[1][i].product_id+`</td>
+        <td>`+response[1][i].product_name+`</td>
+        <td>`+response[1][i].product_price+`</td>
+        <td>`+response[1][i].product_quantity+`</td>
+        <td>`+response[1][i].weight+`</td>
+        <td>`+(response[1][i].total_price)+`</td>
+        <td><div class="view-edit" onclick="editProduct(`+response[1][i].product_id+`)">View</div></td>
+      </tr>
+      `
+    }
+    toChange += 
+    `        
+      </tbody>
+    </table>
+    `;
+    editCloseOrderTableBody.innerHTML = toChange ;
+  })
+  .catch(error => {
+    alert(error.message)
+    console.log(error);
+  });
+};
+
+/* View all Open Order & search */
+function openOrder(search){
+
+  var openOrderTableBody = document.getElementById("open-order-table-body");
+  fetch(host+`/admin/open_order?search=`+search)
+    .then(response => {
+      return response.json();
+    })
+    .then(response=> {
+      var toChange = `
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Delivery ID</th>
+            <th>Customer ID</th>
+            <th>Customer Name</th>
+            <th>Date of Order</th>
+            <th>Total Price</th>
+            <th>Total Quantity</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+      `;
+      for (i=0; i<response.length; i++){
+        toChange += 
+        `
+        <tr>
+          <td>`+response[i].order_id+`</td>
+          <td>`+response[i].delivery_id+`</td>
+          <td>`+response[i].customer_id+`</td>
+          <td>`+response[i].customer_name+`</td>
+          <td>`+response[i].date_of_order+`</td>
+          <td>`+response[i].total_price+`</td>
+          <td>`+response[i].total_quantity+`</td>
+          <td><div class="view-edit" onclick="editOpenOrder(`+response[i].order_id+`)">View</div></td>
+        </tr>
+        `
+      }
+      toChange += 
+      `        
+        </tbody>
+      </table>
+      `;
+      openOrderTableBody.innerHTML = toChange ;
+    })
+    .catch(error => {
+      alert(error.message)
+      console.log(error.message)
+      console.log(error);
+    });
+};
+
+/* Redirect to view/edit store category */
+function editOpenOrder(orderId){
+  window.location = './editOpenOrder.html?order_id='+orderId;
+};
+
+/* View Store Category Details */
+function viewOpenOrder(){
+  var order_id = getQueryVariable("order_id");
+  fetch(host+`/admin/view_open_order?order_id=`+order_id)
+  .then(response => {
+    return response.json();
+  })
+  .then(response => {
+    if(response.status == 404){
+      throw response;
+    }
+    document.getElementById("order-id").innerHTML = order_id
+    document.getElementById("order-customer-id").innerHTML = response[0][0].customer_id;
+    document.getElementById("order-delivery-id").value = response[0][0].delivery_id;
+    document.getElementById("order-postal-code").value = response[0][0].postal_code;
+    document.getElementById("order-mobile-number").value = response[0][0].mobile_number;
+    document.getElementById("order-date-of-order").value = formatDate(response[0][0].date_of_order);
+    document.getElementById("order-date-to-deliver").value = formatDate(response[0][0].date_to_deliver);
+    document.getElementById("order-status").value = response[0][0].order_status;
+    document.getElementById("order-delivery-fee").value = response[0][0].delivery_fee;
+
+    
+    var editOpenOrderTableBody = document.getElementById("edit-open-order-table-body");
+    var toChange = `
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Order Detail ID</th>
+          <th>Seller ID</th>
+          <th>Product ID</th>
+          <th>Product Name</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Weight</th>
+          <th>Total Price</th>
+          <th>Action<th>
+        </tr>
+      </thead>
+      <tbody>
+    `;
+    for (i=0; i<response[1].length; i++){
+      toChange += 
+      `
+      <tr>
+        <td>`+response[1][i].order_detail_id+`</td>
+        <td>`+response[1][i].seller_id+`</td>
+        <td>`+response[1][i].product_id+`</td>
+        <td>`+response[1][i].product_name+`</td>
+        <td>`+response[1][i].product_price+`</td>
+        <td>`+response[1][i].product_quantity+`</td>
+        <td>`+response[1][i].weight+`</td>
+        <td>`+(response[1][i].total_price)+`</td>
+        <td><div class="view-edit" onclick="editProduct(`+response[1][i].product_id+`)">View</div></td>
+      </tr>
+      `
+    }
+    toChange += 
+    `        
+      </tbody>
+    </table>
+    `;
+    editOpenOrderTableBody.innerHTML = toChange ;
+  })
+  .catch(error => {
+    alert(error.message)
+    console.log(error);
+  });
+};
+
+/* Cancel Order */
+function cancelOrder(){
+  var order_id = getQueryVariable("order_id");
+  fetch(host+`/admin/cancel_order?order_id=`+order_id, {
+    method: 'DELETE'
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(response => {
+    if(response.status == 404){
+      throw response;
+    }
+    alert("Order "+order_id+" has been cancel!")
+    window.location = "./openOrder.html"
+  })
+  .catch(error => {
+    alert(error.message)
+    console.log(error);
+  });
+};
+
+/* View all Rating & search */
+function rating(search){
+
+  var ratingTableBody = document.getElementById("rating-table-body");
+  fetch(host+`/admin/rating?search=`+search)
+    .then(response => {
+      return response.json();
+    })
+    .then(response=> {
+      var toChange = `
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Rating ID</th>
+            <th>Order ID</th>
+            <th>Seller ID</th>
+            <th>Customer ID</th>
+            <th>Rating</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+      `;
+      for (i=0; i<response.length; i++){
+        toChange += 
+        `
+        <tr>
+          <td>`+response[i].rating_id+`</td>
+          <td>`+response[i].order_id+`</td>
+          <td>`+response[i].seller_id+`</td>
+          <td>`+response[i].customer_id+`</td>
+          <td>`+response[i].rating+`/5</td>
+          <td><div class="view-edit" onclick="editRating(`+response[i].rating_id+`)">View/Edit</div></td>
+        </tr>
+        `
+      }
+      toChange += 
+      `        
+        </tbody>
+      </table>
+      `;
+      ratingTableBody.innerHTML = toChange ;
+    })
+    .catch(error => {
+      alert(error.message)
+      console.log(error.message)
+      console.log(error);
+    });
+};
+
+/* Redirect to view/edit rating  */
+function editRating(ratingId){
+  window.location = './editRating.html?rating_id='+ratingId;
+};
+
+/* View Rating Details */
+function viewRating(){
+  var rating_id = getQueryVariable("rating_id");
+  fetch(host+`/admin/view_rating?rating_id=`+rating_id)
+  .then(response => {
+    return response.json();
+  })
+  .then(response => {
+    console.log(response  )
+    if(response.status == 404){
+      throw response;
+    }
+    document.getElementById("rating-id").innerHTML = rating_id
+    document.getElementById("rating-seller-id").value = response.seller_id;
+    document.getElementById("rating-customer-id").value = response.customer_id;
+    document.getElementById("rating-order-id").value = response.order_id;
+    document.getElementById("rating-rating").value = response.rating;
+  })
+  .catch(error => {
+    alert(error.message)
+    console.log(error);
+  });
+};
+
+/* Update Rating */
+function updateRating(){
+
+  var rating_id = getQueryVariable("rating_id");
+  const seller_id = document.getElementById("rating-seller-id").value;
+  const rating = document.getElementById("rating-rating").value;
+
+  fetch(host+`/admin/rating`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({"rating_id": rating_id,"rating": rating,"seller_id": seller_id})
+  })
+  .then(response => {
+    if(response.status == 200){
+      alert("Rating "+rating_id+" has been updated!")
+      window.location = "./rating.html"
+    }
+  })
+  .catch(error => {
+    alert(error.message)
+    console.log(error);
+  });
+};
+
+/* Delete Rating */
+function deleteRating(){
+  var rating_id = getQueryVariable("rating_id");
+  fetch(host+`/admin/delete_rating?rating_id=`+rating_id, {
+    method: 'DELETE'
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(response => {
+    if(response.status == 404){
+      throw response;
+    }
+    alert("Rating "+rating_id+" has been deleted!")
+    window.location = "./rating.html"
+  })
+  .catch(error => {
+    alert(error.message)
+    console.log(error);
+  });
+};
+
+/* View all Product Category & search */
+function finance(search){
+
+  var financeTableBody = document.getElementById("finance-table-body");
+  fetch(host+`/admin/finance?search=`+search)
+    .then(response => {
+      return response.json();
+    })
+    .then(response=> {
+      var toChange = `
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Finance Record ID</th>
+            <th>Date of Record</th>
+            <th>Paid</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+      `;
+      for (i=0; i<response.length; i++){
+        toChange += 
+        `
+        <tr>
+          <td>`+response[i].finance_record_id+`</td>
+          <td>`+response[i].date_of_record+`</td>
+          <td>`+booleanToString(response[i].paid)+`</td>
+          <td><div class="view-edit" onclick="editFinance(`+response[i].finance_record_id+`)">View/Edit</div></td>
+        </tr>
+        `
+      }
+      toChange += 
+      `        
+        </tbody>
+      </table>
+      `;
+      financeTableBody.innerHTML = toChange ;
+    })
+    .catch(error => {
+      alert(error.message)
+      console.log(error.message)
+      console.log(error);
+    });
+};
+
+function addFinanceRecordButton() {
+  let today = new Date();
+  let date = today.getDate()+'-'+(today.getMonth()+1)+"-"+today.getFullYear();
+
+  var confirmation = confirm("Do you want to create a new finance record for "+date+" ?");
+  if (confirmation){
+    addFinanceRecord();
+  };
+};
+
+/* Add Store Category */
+function addFinanceRecord(){
+  fetch(host+`/admin/finance_record`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(response => {
+    if(response.status == 201){
+      alert("Finance record has been created!")
+    };
+  })
+  .catch(error => {
+    console.log(error.message)
     console.log(error);
   });
 };
