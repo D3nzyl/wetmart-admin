@@ -1,4 +1,4 @@
-const host = "http://localhost:3000";
+const host = "https://wetmart-backend.herokuapp.com/";
 
 function formatDate(date) {
   var d = new Date(date),
