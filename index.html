@@ -1,5 +1,4 @@
 <html>
-
 <head>
     <link type="text/css" rel="stylesheet" href="./styles/style.css" />
     <script type="text/javascript" src="./script.js"></script>
@@ -9,42 +8,90 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <link rel="icon" type="image/png" href="./img/wetmart_icon.png"/>
-    <title>Wetmart - Login</title>
+    <title>Wetmart - Home</title>
 </head>
 
-<body style="background-image: url('./img/wallpaper.png'); background-repeat: no-repeat;background-attachment: fixed; background-position: center;">
-    <div class="container-fluid">
+<body>
+
+<div class="wrapper">
+  <div class="sidebar">
+      <a href="home.html"><img id="wetmart-nav" src="./img/wetmart_logo.png" alt="WetMart"/></a>
+      <ul>
+          <li class="nav-title">Customer</li>
+          <li><a href="customer.html"><i class="fa fa-user"></i>View/Edit Customers</a></li>
+          <li><a href="addCustomer.html"><i class="fa fa-plus-circle"></i>Add Customer</a></li>
+          <li class="nav-title">Seller</li>
+          <li><a href="seller.html"><i class="fa fa-user"></i>View/Edit Seller</a></li>
+          <li><a href="addSeller.html"><i class="fa fa-plus-circle"></i>Add Seller</a></li>
+          <li><a href="sellerRegistration.html"><i class="fa fa-check-circle"></i>View Seller Registration</a></li>
+          <li><a href="storeCategory.html"><i class="fa fa-archive"></i>View/Edit Store Category</a></li>
+          <li class="nav-title">Products</li>
+          <li><a href="product.html"><i class="fa fa-th-large"></i>View/Edit Product</a></li>
+          <li><a href="addProduct.html"><i class="fa fa-plus-circle"></i>Add Product</a></li>
+          <li><a href="productCategory.html"><i class="fa fa-archive"></i>View/Edit Product Category</a></li>
+          <li class="nav-title">Orders</li>
+          <li><a href="openOrder.html"><i class="fa fa-folder-open"></i>View/Edit Open Orders</a></li>
+          <li><a href="closeOrder.html"><i class="fa fa-folder"></i>View Close Order</a></li>
+          <li class="nav-title">Others</li>
+          <li><a href="admin.html"><i class="fa fa-user"></i>View/Edit Admin</a></li>
+          <li><a href="market.html"><i class="fa fa-shopping-basket"></i>View/Edit Market</a></li>
+          <li><a href="rating.html"><i class="fa fa-star"></i>View Rating Detials</a></li>
+          <li><a href="finance.html"><i class="fa fa-dollar"></i>View/Edit Finance</a></li>
+      </ul> 
+  </div>
+  <div class="main_content">
+      <div class="header">
+        <a href="home.html" id="home"><i class="fa fa-home"></i></a>
+        Home
+        <a href="index.html" id="logout"><i class="fa fa-sign-out"></i> Logout</a>
+      </div>  
+      <div class="info">
+        <div id="home-title">WetMart Admin Dashboard</div>
+        <hr id="home-hr"/>
         <div class="row">
-            <div class="col-sm-12 col-lg-5 mx-auto">
-                <div class="row">
-                    <div id="login-container">
-                        <img id="wetmart-logo" src="./img/wetmart_logo.png" alt="WetMart"/>
-                        <div id="logo-text">Admin</div>
-                        <hr id="login-hr"/>
-                        <form>
-                            <div class="form-group">
-                                <div id = "login-email-container">
-                                    <input type="email" class="form-control mx-auto input-field" id="login-email" placeholder="Email">
-                                    <i class="fa fa-envelope fa-lg"></i>
-                                </div>
-                                <div id = "login-password-container">
-                                    <input type="text" class="form-control mx-auto input-field " id="login-password" placeholder="Password">
-                                    <i class="fa fa-lock fa-lg"></i>
-                                </div>
-                            </div>
-                        </form> 
-                        <div id = "login-button-container">
-                            <button id="login-button" class="btn btn-primary" onclick="login()"><i class="fa fa-sign-in"></i> Login</button>
-                        </div>
-                    </div>
-                </div>
-            </div>  
+          <div class="col-6">
+            <a href="addSeller.html" class="home-shortcut-link">
+              <div class="home-shortcut">
+                  <i class="fa fa-plus-circle"></i>
+                  <hr class="home-shortcut-hr"/>
+                  Add Seller
+              </div>
+            </a>
+          </div>
+          <div class="col-6">
+            <a href="addAdmin.html" class="home-shortcut-link">
+              <div class="home-shortcut">
+                  <i class="fa fa-plus-circle"></i>
+                  <hr class="home-shortcut-hr"/>
+                  Add Admin
+              </div>
+            </a>
+          </div>
+          <div class="col-6">
+            <a href="openOrder.html" class="home-shortcut-link">
+              <div class="home-shortcut">
+                  <i class="fa fa-folder-open"></i>
+                  <hr class="home-shortcut-hr"/>
+                  View/Edit Open Orders
+              </div>
+            </a>
+          </div>
+          <div class="col-6">
+            <a href="product.html" class="home-shortcut-link">
+              <div class="home-shortcut">
+                  <i class="fa fa-plus-circle"></i>
+                  <hr class="home-shortcut-hr"/>
+                  View/Edit Products
+              </div>
+            </a>
+          </div>
         </div>
         
+      </div>
     </div>
+  </div>
 </body>
-
 </html>

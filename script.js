@@ -1,4 +1,4 @@
-const host = "https://wetmart-backend.herokuapp.com/";
+const host = "https://wetmart-backend.herokuapp.com";
 
 function formatDate(date) {
   var d = new Date(date),
