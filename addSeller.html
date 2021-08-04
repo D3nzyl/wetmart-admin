@@ -47,7 +47,7 @@
     <div class="header">
       <a href="home.html" id="home"><i class="fa fa-home"></i></a>
       Add Seller
-      <a href="index.html" id="logout"><i class="fa fa-sign-out"></i> Logout</a>
+      <a onclick="logout()" id="logout"><i class="fa fa-sign-out"></i> Logout</a>
     </div>  
     <div class="info">
       <div class="row">
@@ -88,6 +88,7 @@
               <label class="form-label" for="seller-last-name">Last Name:</label>
               <label class="form-label" for="seller-unit-number">Unit Number:</label>
               <label class="form-label" for="seller-market-id">Market ID</label>
+              <label class="form-label" for="seller-bank-full-name">Bank Full Name:</label>
               <label class="form-label" for="seller-bank">Bank:</label>
               <label class="form-label" for="seller-bank-account">Bank Account:</label>
               <label class="form-label" for="seller-store-image">Store Image:</label>
@@ -96,6 +97,7 @@
               <input class="form-input" id="seller-last-name" type="text" placeholder="Last Name" value="test1">
               <input class="form-input" id="seller-unit-number" type="text" placeholder="Unit Number" value="01-123">
               <select id="seller-market-id" class="form-input">
+              <input class="form-input" id="seller-bank-full-name" type="text" placeholder="Bank Full Name" value="Bank Full Name">
               </select>
               <select id="seller-bank" class="form-input">
                 <option value="OCBC">OCBC</option>

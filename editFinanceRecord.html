@@ -11,11 +11,11 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <link rel="icon" type="image/png" href="./img/wetmart_icon.png"/>
-    <title>Wetmart - Add Product Category</title>
+    <title>Wetmart - Edit Finance Record</title>
     
 </head>
 
-<body>
+<body onload="viewFinanceRecord();">
 
 <div class="wrapper">
   <div class="sidebar">
@@ -46,28 +46,46 @@
   <div class="main_content">
     <div class="header">
       <a href="home.html" id="home"><i class="fa fa-home"></i></a>
-      Add Product Category
+      View/Edit Finance Record
       <a onclick="logout()" id="logout"><i class="fa fa-sign-out"></i> Logout</a>
     </div>  
     <div class="info">
       <div class="row">
         <div class="col-10 mx-auto" id="add-container">
           <div class="row">
-            <div class="col-12">Product Category</div>
+            <div class="col-9">Finance Record</div>
+            <div class="col-3"> <div class="delete-button" onclick=deleteFinanceRecord()><i class="fa fa-trash"></i> Delete Finance Record</div></div>
           </div>
           <hr>
           <div class="row">
+            <div class="col-2">Finance Record ID: </div>
+            <div class="col-4" id="finance-record-id"></div>
+          </div>
+          <div class="row">
             <div class="col-2">
-              <label class="form-label" for="product-category-name">Category Name:</label>
+              <label class="form-label" for="finance-record-date-of-record">Date of Record:</label>
             </div>
             <div class="col-4">
-              <input class="form-input" id="product-category-name" type="text" placeholder="Category Name">
+              <input class="form-input" id="finance-record-date-of-record" type="text" placeholder="DD-MM-YYYY" disabled="disabled">
+            </div>
+            <div class="col-2">
+                <label class="form-label" for="finance-record-paid">Paid:</label>
+            </div>
+            <div class="col-4">
+              <select id="finance-record-paid" class="form-input">
+                <option value=true>Yes</option>
+                <option value=false>No</option>
+              </select>
             </div>
           </div>
           <div class="row">
-            <div class="col-12">
-              <div class="add-button" onclick=addProductCategory()><i class="fa fa-plus-circle"></i> Add Product Category</div>
+            <div class="col-9">
+              <div class="add-button" onclick=updateFinanceRecord()><i class="fa fa-save"></i> Update</div>
             </div>
+            <div class="col-3">
+              <div class="add-button" onclick="downloadFinanceRecord(document.getElementById('finance-record-id').value)"><i class="fa fa-download"></i> Download</div>
+            </div>
+          </div>
           </div>
         </div>
       </div>

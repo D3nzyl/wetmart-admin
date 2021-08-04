@@ -15,7 +15,7 @@
     
 </head>
 
-<body onload="finance('');">
+<body onload="financeRecord('');">
 
 <div class="wrapper">
   <div class="sidebar">
@@ -47,13 +47,13 @@
     <div class="header">
       <a href="home.html" id="home"><i class="fa fa-home"></i></a>
       View/Edit Finance
-      <a href="index.html" id="logout"><i class="fa fa-sign-out"></i> Logout</a>
+      <a onclick="logout()" id="logout"><i class="fa fa-sign-out"></i> Logout</a>
     </div>  
     <div class="info">
       <div class="row">
         <div class="col-6">
           <label id="searchbar-label" for="searchbar">Search:</label>
-          <input id="searchbar" type="date">
+          <input id="searchbar" type="text" placeholder="Finance ID">
           <i id="searchbar-icon" onclick="finance(document.getElementById('searchbar').value)" class="fa fa-search"></i>
         </div>
         <div class="col-3">

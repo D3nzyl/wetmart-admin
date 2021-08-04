@@ -1,4 +1,5 @@
-const host = "https://wetmart-backend.herokuapp.com";
+//const host = "https://wetmart-hosting.herokuapp.com";
+const host = "http://localhost:3000";
 
 function formatDate(date) {
   var d = new Date(date),
@@ -48,7 +49,11 @@ var loadFile = function(event) {
 };
 
 
-
+/* Logout */
+function logout() {
+  localStorage.removeItem("JWT");
+  window.location = "./index.html"
+};
 
 /* Login */
 function login() {
@@ -56,22 +61,27 @@ function login() {
     const password = document.getElementById('login-password').value;
     fetch(host+`/admin/login`, {
         method: 'post',
+        redirect: 'follow',
+        credentials: 'include', // Don't forget to specify this if you need cookies
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
         },
         body: JSON.stringify({"email": email, "password": password})
       })
       .then(response => {
-        return response.json();
-      })
-      .then(response => {
         if(response.status >= 400 && response.status <= 499) {
-            alert(response.message)
+            alert(response.message);
+            throw error;
         }
         else{
-            console.log(response)
-          //document.location.href = "homepage.html";
+            return response.json();
         };
+      })
+      .then(response => {
+        console.log(response);
+        localStorage.setItem("JWT",response.accessToken);
+        document.location.href = "home.html";
       })
       .catch(error => {
         alert(error.message)
@@ -84,7 +94,11 @@ function login() {
 function customer(search){
 
   var customerTableBody = document.getElementById("customer-table-body");
-  fetch(host+`/admin/customer?search=`+search)
+  fetch(host+`/admin/customer?search=`+search,{
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
+    }})
     .then(response => {
       return response.json();
     })
@@ -146,7 +160,8 @@ function addCustomer(){
   fetch(host+`/admin/customer`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
     },
     body: JSON.stringify({"email": email,"first_name": first_name,"last_name": last_name,"postal_code": postal_code, "unit_number": unit_number,"mobile_number": mobile_number,"date_of_birth": date_of_birth,"gender": gender, "password": password, "address": address})
   })
@@ -170,7 +185,11 @@ function editCustomer(customerId){
 /* View Customer Details */
 function viewCustomer(){
   var customer_id = getQueryVariable("customer_id");
-  fetch(host+`/admin/view_customer?customer_id=`+customer_id)
+  fetch(host+`/admin/view_customer?customer_id=`+customer_id,{
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
+    }})
   .then(response => {
     return response.json();
   })
@@ -202,6 +221,10 @@ function viewCustomer(){
 function deleteCustomer(){
   var customer_id = getQueryVariable("customer_id");
   fetch(host+`/admin/delete_customer?customer_id=`+customer_id, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
+    },
     method: 'DELETE'
   })
   .then(response => {
@@ -238,7 +261,8 @@ function updateCustomer(){
   fetch(host+`/admin/customer`, {
     method: 'PUT',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
     },
     body: JSON.stringify({"customer_id":customer_id,"email": email,"first_name": first_name,"last_name": last_name,"postal_code": postal_code, "unit_number": unit_number,"mobile_number": mobile_number,"date_of_birth": date_of_birth,"gender": gender, "password": password, "address": address})
   })
@@ -258,7 +282,13 @@ function updateCustomer(){
 function admin(search){
 
   var adminTableBody = document.getElementById("admin-table-body");
-  fetch(host+`/admin/admin?search=`+search)
+  fetch(host+`/admin/admin?search=`+search,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': localStorage.getItem("JWT")
+      }}
+    )
     .then(response => {
       return response.json();
     })
@@ -321,7 +351,8 @@ function addAdmin(){
   fetch(host+`/admin/admin`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
     },
     body: JSON.stringify({"email": email,"first_name": first_name,"last_name": last_name, "address": address,"mobile_number": mobile_number,"date_of_birth": date_of_birth,"gender": gender, "password": password, "position": position})
   })
@@ -345,7 +376,11 @@ function editAdmin(adminId){
 /* View Admin Details */
 function viewAdmin(){
   var admin_id = getQueryVariable("admin_id");
-  fetch(host+`/admin/view_admin?admin_id=`+admin_id)
+  fetch(host+`/admin/view_admin?admin_id=`+admin_id,{
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
+    }})
   .then(response => {
     return response.json();
   })
@@ -376,6 +411,10 @@ function viewAdmin(){
 function deleteAdmin(){
   var admin_id = getQueryVariable("admin_id");
   fetch(host+`/admin/delete_admin?admin_id=`+admin_id, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
+    },
     method: 'DELETE'
   })
   .then(response => {
@@ -411,7 +450,8 @@ function updateAdmin(){
   fetch(host+`/admin/admin`, {
     method: 'PUT',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
     },
     body: JSON.stringify({"admin_id": admin_id,"email": email,"first_name": first_name,"last_name": last_name, "address": address,"mobile_number": mobile_number,"date_of_birth": date_of_birth,"gender": gender, "password": password, "position": position})
   })
@@ -432,7 +472,11 @@ function updateAdmin(){
 function market(search){
 
   var marketTableBody = document.getElementById("market-table-body");
-  fetch(host+`/admin/market?search=`+search)
+  fetch(host+`/admin/market?search=`+search,{
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
+    }})
     .then(response => {
       return response.json();
     })
@@ -488,7 +532,10 @@ function addMarket(){
 
   fetch(host+`/admin/market`, {
     method: 'POST',
-    header:{'Content-TYpe':'multipart/form-data'},
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      'Authorization': localStorage.getItem("JWT")
+    },
     body: fd
   })
   .then(response => {
@@ -517,7 +564,13 @@ function editMarket(marketId){
 /* View Market Details */
 function viewMarket(){
   var market_id = getQueryVariable("market_id");
-  fetch(host+`/admin/view_market?market_id=`+market_id)
+  fetch(host+`/admin/view_market?market_id=`+market_id,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': localStorage.getItem("JWT")
+      }
+    })
   .then(response => {
     return response.json();
   })
@@ -540,6 +593,10 @@ function viewMarket(){
 function deleteMarket(){
   var market_id = getQueryVariable("market_id");
   fetch(host+`/admin/delete_market?market_id=`+market_id, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
+    },
     method: 'DELETE'
   })
   .then(response => {
@@ -573,7 +630,10 @@ function updateMarket(){
 
   fetch(host+`/admin/market`, {
     method: 'PUT',
-    header:{'Content-Type':'multipart/form-data'},
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      'Authorization': localStorage.getItem("JWT")
+    },
     body: fd
   })
   .then(response => {
@@ -593,7 +653,13 @@ function getMarketList(callback1,callback2){
 
   var toChange = "";
   var sellerMarketList = document.getElementById("seller-market-id");
-  fetch(host+'/admin/seller/market_list')
+  fetch(host+'/admin/seller/market_list',
+  {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
+    }
+  })
   .then(response=>{
     return response.json();
   })
@@ -619,7 +685,12 @@ function getStoreCategoryList(callback){
 
   var toChange = "";
   var sellerStoreCategoryList = document.getElementById("seller-store-category-id");
-  fetch(host+'/admin/seller/store_category_list')
+  fetch(host+'/admin/seller/store_category_list',{
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
+    }
+  })
   .then(response=>{
     return response.json();
   })
@@ -645,7 +716,13 @@ function getStoreCategoryList(callback){
 function seller(search){
 
   var sellerTableBody = document.getElementById("seller-table-body");
-  fetch(host+`/admin/seller?search=`+search)
+  fetch(host+`/admin/seller?search=`+search,
+  {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
+    }
+  })
     .then(response => {
       return response.json();
     })
@@ -708,6 +785,7 @@ function addSeller(){
   const last_name = document.getElementById("seller-last-name").value;
   const unit_number = document.getElementById("seller-unit-number").value;
   const market_id = document.getElementById("seller-market-id").value;
+  const bank_full_name = document.getElementById("seller-bank-full-name").value;
   const bank = document.getElementById("seller-bank").value;
   const bank_account = document.getElementById("seller-bank-account").value;
   const image = document.getElementById("seller-store-image").files[0];
@@ -725,13 +803,17 @@ function addSeller(){
   fd.append("last_name",last_name);
   fd.append("unit_number",unit_number);
   fd.append("market_id",market_id);
+  fd.append("bank_full_name",bank_full_name);
   fd.append("bank",bank);
   fd.append("bank_account",bank_account);
   fd.append("image", image);
 
   fetch(host+`/admin/seller`, {
     method: 'POST',
-    header:{'Content-Type':'multipart/form-data'},
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      'Authorization': localStorage.getItem("JWT")
+    },
     body: fd
   })
   .then(response => {
@@ -739,7 +821,7 @@ function addSeller(){
       alert("Seller has been created!")
       window.location = "./seller.html"
     }
-    else if(response.status == 400){
+    else if(response.status == 400 || response.status == 409){
       return response.json()
       .then(response => {
         alert(response.message)
@@ -761,7 +843,13 @@ function editSeller(sellerId){
 /* View Seller Details */
 function viewSeller(){
   var seller_id = getQueryVariable("seller_id");
-  fetch(host+`/admin/view_seller?seller_id=`+seller_id)
+  fetch(host+`/admin/view_seller?seller_id=`+seller_id,
+  {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
+    }
+  })
   .then(response => {
     return response.json();
   })
@@ -784,8 +872,10 @@ function viewSeller(){
     document.getElementById("seller-last-name").value = response[0].last_name;
     document.getElementById("seller-unit-number").value = response[0].unit_number;
     document.getElementById("seller-market-id").value = response[0].market_id;
+    document.getElementById("seller-bank-full-name").value = response[0].full_name;
     document.getElementById("seller-bank").value = response[0].bank;
     document.getElementById("seller-bank-account").value = response[0].bank_account;
+    document.getElementById("seller-account-amount").value = response[0].amount.replace(/[^0-9.-]+/g,"");
     document.getElementById("output").src = response[0].store_image_id;
   })
   .catch(error => {
@@ -798,6 +888,10 @@ function viewSeller(){
 function deleteSeller(){
   var seller_id = getQueryVariable("seller_id");
   fetch(host+`/admin/delete_seller?seller_id=`+seller_id, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
+    },
     method: 'DELETE'
   })
   .then(response => {
@@ -833,8 +927,10 @@ function updateSeller(){
   const last_name = document.getElementById("seller-last-name").value;
   const unit_number = document.getElementById("seller-unit-number").value;
   const market_id = document.getElementById("seller-market-id").value;
+  const bank_full_name = document.getElementById("seller-bank-full-name").value;
   const bank = document.getElementById("seller-bank").value;
   const bank_account = document.getElementById("seller-bank-account").value;
+  const amount = document.getElementById("seller-account-amount").value;
   const image = document.getElementById("seller-store-image").files[0];
   const fd = new FormData();
   fd.append("seller_id",seller_id);
@@ -850,14 +946,19 @@ function updateSeller(){
   fd.append("description",description);
   fd.append("last_name",last_name);
   fd.append("unit_number",unit_number);
+  fd.append("bank_full_name",bank_full_name);
   fd.append("bank",bank);
   fd.append("bank_account",bank_account);
+  fd.append("amount", amount);
   fd.append("market_id",market_id);
   fd.append("image", image);
 
   fetch(host+`/admin/seller`, {
     method: 'PUT',
-    header:{'Content-Type':'multipart/form-data'},
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      'Authorization': localStorage.getItem("JWT")
+    },
     body: fd
   })
   .then(response => {
@@ -876,7 +977,13 @@ function updateSeller(){
 function product(search){
 
   var productTableBody = document.getElementById("product-table-body");
-  fetch(host+`/admin/product?search=`+search)
+  fetch(host+`/admin/product?search=`+search,
+  {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
+    }
+  })
     .then(response => {
       return response.json();
     })
@@ -932,7 +1039,12 @@ function product(search){
 function getSellerList(callback1,callback2){
   var toChange = "";
   var productSellerList = document.getElementById("product-seller-id");
-  fetch(host+'/admin/product/seller_list')
+  fetch(host+'/admin/product/seller_list',{
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
+    }
+  })
   .then(function(response){
     return response.json();
   })
@@ -958,7 +1070,12 @@ function getSellerList(callback1,callback2){
 function getCategoryList(callback){
   var toChange = "";
   var productCategoryList = document.getElementById("product-category-id");
-  fetch(host+'/admin/product/category_list')
+  fetch(host+'/admin/product/category_list',{
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
+    }
+  })
   .then(function(response){
     return response.json();
   })
@@ -1005,7 +1122,10 @@ function addProduct(){
 
   fetch(host+`/admin/product`, {
     method: 'POST',
-    header:{'Content-Type':'multipart/form-data'},
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      'Authorization': localStorage.getItem("JWT")
+    },
     body: fd
   })
   .then(response => {
@@ -1034,7 +1154,13 @@ function editProduct(productId){
 /* View Product Details */
 function viewProduct(){
   var product_id = getQueryVariable("product_id");
-  fetch(host+`/admin/view_product?product_id=`+product_id)
+  fetch(host+`/admin/view_product?product_id=`+product_id,
+  {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
+    }    
+  })
   .then(response => {
     return response.json();
   })
@@ -1062,6 +1188,10 @@ function viewProduct(){
 function deleteProduct(){
   var product_id = getQueryVariable("product_id");
   fetch(host+`/admin/delete_product?product_id=`+product_id, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
+    },
     method: 'DELETE'
   })
   .then(response => {
@@ -1105,7 +1235,10 @@ function updateProduct(){
 
   fetch(host+`/admin/product`, {
     method: 'PUT',
-    header:{'Content-Type':'multipart/form-data'},
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      'Authorization': localStorage.getItem("JWT")
+    },
     body: fd
   })
   .then(response => {
@@ -1124,7 +1257,13 @@ function updateProduct(){
 function productCategory(search){
 
   var productCategoryTableBody = document.getElementById("product-category-table-body");
-  fetch(host+`/admin/product_category?search=`+search)
+  fetch(host+`/admin/product_category?search=`+search,
+  {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
+    }
+  })
     .then(response => {
       return response.json();
     })
@@ -1171,7 +1310,8 @@ function addProductCategory(){
   fetch(host+`/admin/product_category`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
     },
     body: JSON.stringify({"category_name":category_name})
   })
@@ -1195,7 +1335,12 @@ function editProductCategory(productCategoryId){
 /* View Product Category Details */
 function viewProductCategory(){
   var product_category_id = getQueryVariable("product_category_id");
-  fetch(host+`/admin/view_product_category?product_category_id=`+product_category_id)
+  fetch(host+`/admin/view_product_category?product_category_id=`+product_category_id,
+  {    
+    headers: {
+    'Content-Type': 'application/json',
+    'Authorization': localStorage.getItem("JWT")
+  }})
   .then(response => {
     return response.json();
   })
@@ -1216,6 +1361,10 @@ function viewProductCategory(){
 function deleteProductCategory(){
   var product_category_id = getQueryVariable("product_category_id");
   fetch(host+`/admin/delete_product_category?product_category_id=`+product_category_id, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
+    },
     method: 'DELETE'
   })
   .then(response => {
@@ -1243,7 +1392,8 @@ function updateProductCategory(){
   fetch(host+`/admin/product_category`, {
     method: 'PUT',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
     },
     body: JSON.stringify({"product_category_id":product_category_id,"category_name": category_name})
   })
@@ -1263,7 +1413,12 @@ function updateProductCategory(){
 function registration(search){
 
   var sellerRegistrationTableBody = document.getElementById("seller-registration-table-body");
-  fetch(host+`/admin/pending_seller?search=`+search)
+  fetch(host+`/admin/pending_seller?search=`+search,
+  {    
+    headers: {
+    'Content-Type': 'application/json',
+    'Authorization': localStorage.getItem("JWT")
+  }})
     .then(response => {
       return response.json();
     })
@@ -1319,7 +1474,12 @@ function editSellerRegistration(pendingSellerId){
 /* View Seller Registration Details */
 function viewSellerRegistration(){
   var pending_seller_id = getQueryVariable("pending_seller_id");
-  fetch(host+`/admin/view_pending_seller?pending_seller_id=`+pending_seller_id)
+  fetch(host+`/admin/view_pending_seller?pending_seller_id=`+pending_seller_id,
+  {    
+    headers: {
+    'Content-Type': 'application/json',
+    'Authorization': localStorage.getItem("JWT")
+  }})
   .then(response => {
     return response.json();
   })
@@ -1343,6 +1503,7 @@ function viewSellerRegistration(){
     document.getElementById("seller-market-id").value = response[0].market_id;
     document.getElementById("seller-bank").value = response[0].bank;
     document.getElementById("seller-bank-account").value = response[0].bank_account;
+    document.getElementById("seller-bank-full-name").value = response[0].full_name;
     document.getElementById("output").src = response[0].store_image_id;
   })
   .catch(error => {
@@ -1358,7 +1519,8 @@ function approveSeller(){
   fetch(host+`/admin/approve_pending_seller`, {
     method: 'PUT',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
     },
     body: JSON.stringify({"pending_seller_id":pending_seller_id})
   })
@@ -1381,7 +1543,8 @@ function rejectSeller(){
   fetch(host+`/admin/reject_pending_seller`, {
     method: 'DELETE',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
     },
     body: JSON.stringify({"pending_seller_id":pending_seller_id})
   })
@@ -1401,7 +1564,13 @@ function rejectSeller(){
 function storeCategory(search){
 
   var storeCategoryTableBody = document.getElementById("store-category-table-body");
-  fetch(host+`/admin/store_category?search=`+search)
+  fetch(host+`/admin/store_category?search=`+search,
+  {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
+    }
+  })
     .then(response => {
       return response.json();
     })
@@ -1453,7 +1622,8 @@ function addStoreCategory(){
   fetch(host+`/admin/store_category`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
     },
     body: JSON.stringify({"category_name":category_name})
   })
@@ -1472,7 +1642,13 @@ function addStoreCategory(){
 /* View Store Category Details */
 function viewStoreCategory(){
   var store_category_id = getQueryVariable("store_category_id");
-  fetch(host+`/admin/view_store_category?store_category_id=`+store_category_id)
+  fetch(host+`/admin/view_store_category?store_category_id=`+store_category_id,
+  {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
+    }
+  })
   .then(response => {
     return response.json();
   })
@@ -1493,6 +1669,10 @@ function viewStoreCategory(){
 function deleteStoreCategory(){
   var store_category_id = getQueryVariable("store_category_id");
   fetch(host+`/admin/delete_store_category?store_category_id=`+store_category_id, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
+    },
     method: 'DELETE'
   })
   .then(response => {
@@ -1521,7 +1701,8 @@ function updateStoreCategory(){
   fetch(host+`/admin/store_category`, {
     method: 'PUT',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
     },
     body: JSON.stringify({"store_category_id":store_category_id,"category_name": category_name})
   })
@@ -1541,7 +1722,13 @@ function updateStoreCategory(){
 function closeOrder(search){
 
   var closeOrderTableBody = document.getElementById("close-order-table-body");
-  fetch(host+`/admin/close_order?search=`+search)
+  fetch(host+`/admin/close_order?search=`+search,
+  {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
+    }
+  })
     .then(response => {
       return response.json();
     })
@@ -1599,7 +1786,13 @@ function editCloseOrder(orderId){
 /* View Store Category Details */
 function viewCloseOrder(){
   var order_id = getQueryVariable("order_id");
-  fetch(host+`/admin/view_close_order?order_id=`+order_id)
+  fetch(host+`/admin/view_close_order?order_id=`+order_id,
+  {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
+    }
+  })
   .then(response => {
     return response.json();
   })
@@ -1669,7 +1862,13 @@ function viewCloseOrder(){
 function openOrder(search){
 
   var openOrderTableBody = document.getElementById("open-order-table-body");
-  fetch(host+`/admin/open_order?search=`+search)
+  fetch(host+`/admin/open_order?search=`+search,
+  {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
+    }
+  })
     .then(response => {
       return response.json();
     })
@@ -1727,7 +1926,13 @@ function editOpenOrder(orderId){
 /* View Store Category Details */
 function viewOpenOrder(){
   var order_id = getQueryVariable("order_id");
-  fetch(host+`/admin/view_open_order?order_id=`+order_id)
+  fetch(host+`/admin/view_open_order?order_id=`+order_id,
+  {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
+    }
+  })
   .then(response => {
     return response.json();
   })
@@ -1797,6 +2002,10 @@ function viewOpenOrder(){
 function cancelOrder(){
   var order_id = getQueryVariable("order_id");
   fetch(host+`/admin/cancel_order?order_id=`+order_id, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
+    },
     method: 'DELETE'
   })
   .then(response => {
@@ -1819,7 +2028,13 @@ function cancelOrder(){
 function rating(search){
 
   var ratingTableBody = document.getElementById("rating-table-body");
-  fetch(host+`/admin/rating?search=`+search)
+  fetch(host+`/admin/rating?search=`+search,
+  {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
+    }
+  })
     .then(response => {
       return response.json();
     })
@@ -1873,7 +2088,13 @@ function editRating(ratingId){
 /* View Rating Details */
 function viewRating(){
   var rating_id = getQueryVariable("rating_id");
-  fetch(host+`/admin/view_rating?rating_id=`+rating_id)
+  fetch(host+`/admin/view_rating?rating_id=`+rating_id,
+  {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
+    }
+  })
   .then(response => {
     return response.json();
   })
@@ -1904,7 +2125,8 @@ function updateRating(){
   fetch(host+`/admin/rating`, {
     method: 'PUT',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
     },
     body: JSON.stringify({"rating_id": rating_id,"rating": rating,"seller_id": seller_id})
   })
@@ -1924,6 +2146,10 @@ function updateRating(){
 function deleteRating(){
   var rating_id = getQueryVariable("rating_id");
   fetch(host+`/admin/delete_rating?rating_id=`+rating_id, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
+    },
     method: 'DELETE'
   })
   .then(response => {
@@ -1943,10 +2169,16 @@ function deleteRating(){
 };
 
 /* View all Product Category & search */
-function finance(search){
+function financeRecord(search){
 
   var financeTableBody = document.getElementById("finance-table-body");
-  fetch(host+`/admin/finance?search=`+search)
+  fetch(host+`/admin/finance?search=`+search,
+  {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
+    }
+  })
     .then(response => {
       return response.json();
     })
@@ -1970,7 +2202,7 @@ function finance(search){
           <td>`+response[i].finance_record_id+`</td>
           <td>`+response[i].date_of_record+`</td>
           <td>`+booleanToString(response[i].paid)+`</td>
-          <td><div class="view-edit" onclick="editFinance(`+response[i].finance_record_id+`)">View/Edit</div></td>
+          <td><div class="view-edit" onclick="editFinanceRecord(`+response[i].finance_record_id+`)">View/Edit</div></td>
         </tr>
         `
       }
@@ -2003,16 +2235,133 @@ function addFinanceRecord(){
   fetch(host+`/admin/finance_record`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
     }
   })
   .then(response => {
     if(response.status == 201){
       alert("Finance record has been created!")
-    };
+      location.reload();
+    }
+    else if(response.status == 409){
+      alert("Finance record for today already exist")
+    }
   })
   .catch(error => {
     console.log(error.message)
     console.log(error);
   });
 };
+
+/* Redirect to view/edit rating  */
+function editFinanceRecord(finance_record_id){
+  window.location = './editFinanceRecord.html?finance_record_id='+finance_record_id;
+};
+
+/* View Finance Record */
+function viewFinanceRecord(){
+  console.log('1')
+  var finance_record_id = getQueryVariable("finance_record_id");
+  fetch(host+`/admin/view_finance_record?finance_record_id=`+finance_record_id,
+  {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
+    }
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(response => {
+    console.log(response  )
+    if(response.status == 404){
+      throw response;
+    }
+    document.getElementById("finance-record-id").innerHTML = finance_record_id
+    document.getElementById("finance-record-date-of-record").value = response.date_of_record;
+    document.getElementById("finance-record-paid").value = response.paid;
+  })
+  .catch(error => {
+    alert(error.message)
+    console.log(error);
+  });
+};
+
+/* Update Finance Record */
+function updateFinanceRecord(){
+
+  var finance_record_id = getQueryVariable("finance_record_id");
+  const paid = document.getElementById("finance-record-paid").value;
+
+  fetch(host+`/admin/finance_record`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
+    },
+    body: JSON.stringify({"finance_record_id": finance_record_id,"paid": paid})
+  })
+  .then(response => {
+    if(response.status == 200){
+      alert("Finance Record "+finance_record_id+" has been updated!")
+      window.location = "./finance.html"
+    }
+  })
+  .catch(error => {
+    alert(error.message)
+    console.log(error);
+  });
+};
+
+/* Delete Finance Recor */
+function deleteFinanceRecord(){
+  var finance_record_id = getQueryVariable("finance_record_id");
+  fetch(host+`/admin/delete_finance_record?finance_record_id=`+finance_record_id, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
+    },
+    method: 'DELETE'
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(response => {
+    if(response.status == 404){
+      throw response;
+    }
+    alert("Finance record "+finance_record_id+" has been deleted!")
+    window.location = "./finance.html"
+  })
+  .catch(error => {
+    alert(error.message)
+    console.log(error);
+  });
+};
+
+/* Download Finance Recor */
+function downloadFinanceRecord(){
+  var finance_record_id = getQueryVariable("finance_record_id");
+  fetch(host+`/admin/download_finance_record?finance_record_id=`+finance_record_id, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem("JWT")
+    }
+  })
+  .then(response => {
+    if(response.status == 404){
+      throw response;
+    }
+    return response.json();
+  })
+  .then(response => {
+    window.open(response.downloadLink);
+  })
+  .catch(error => {
+    alert(error.message)
+    console.log(error);
+  });
+};
+

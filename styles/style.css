@@ -17,6 +17,12 @@ body {
     flex-wrap: wrap;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 
 /* Login Page */
 #login-container {
@@ -179,6 +185,10 @@ body {
     top:20px;
     right:20px;
     color: #5A9896;
+}
+
+#logout:hover {
+    cursor: pointer;
 }
 
 .wrapper .main_content{
