@@ -1,5 +1,5 @@
-const host = "https://wetmart-hosting.herokuapp.com";
-//const host = "http://localhost:3000";
+//const host = "https://wetmart-hosting.herokuapp.com";
+const host = "http://localhost:3000";
 
 function formatDate(date) {
   var d = new Date(date),
@@ -533,7 +533,6 @@ function addMarket(){
   fetch(host+`/admin/market`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'multipart/form-data',
       'Authorization': localStorage.getItem("JWT")
     },
     body: fd
@@ -615,7 +614,7 @@ function deleteMarket(){
   });
 };
 
-/* Update Admin */
+/* Update Market */
 function updateMarket(){
 
   const market_id = getQueryVariable("market_id");
@@ -631,7 +630,6 @@ function updateMarket(){
   fetch(host+`/admin/market`, {
     method: 'PUT',
     headers: {
-      'Content-Type': 'multipart/form-data',
       'Authorization': localStorage.getItem("JWT")
     },
     body: fd
@@ -811,7 +809,6 @@ function addSeller(){
   fetch(host+`/admin/seller`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'multipart/form-data',
       'Authorization': localStorage.getItem("JWT")
     },
     body: fd
@@ -956,7 +953,6 @@ function updateSeller(){
   fetch(host+`/admin/seller`, {
     method: 'PUT',
     headers: {
-      'Content-Type': 'multipart/form-data',
       'Authorization': localStorage.getItem("JWT")
     },
     body: fd
@@ -1123,7 +1119,6 @@ function addProduct(){
   fetch(host+`/admin/product`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'multipart/form-data',
       'Authorization': localStorage.getItem("JWT")
     },
     body: fd
@@ -1236,7 +1231,6 @@ function updateProduct(){
   fetch(host+`/admin/product`, {
     method: 'PUT',
     headers: {
-      'Content-Type': 'multipart/form-data',
       'Authorization': localStorage.getItem("JWT")
     },
     body: fd
