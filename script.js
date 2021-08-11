@@ -1,5 +1,5 @@
-const host = "https://wetmart-hosting.herokuapp.com";
-//const host = "http://localhost:3000";
+//const host = "https://wetmart-hosting.herokuapp.com";
+lconst host = "http://localhost:3000";
 
 function formatDate(date) {
   var d = new Date(date),
@@ -80,8 +80,13 @@ function login() {
       })
       .then(response => {
         console.log(response);
-        localStorage.setItem("JWT",response.accessToken);
-        document.location.href = "home.html";
+        if (response.accessToken != null){
+          localStorage.setItem("JWT",response.accessToken);
+          document.location.href = "home.html";
+        }
+        else{
+          alert("Invalid email or password")
+        };
       })
       .catch(error => {
         alert(error.message)
